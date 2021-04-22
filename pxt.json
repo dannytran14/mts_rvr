@@ -4,12 +4,17 @@
     "dependencies": {
         "core": "*",
         "radio": "*",
-        "microphone": "*"
+        "microphone": "*",
+        "SpheroRVR": "github:sphero-inc/sphero-sdk-microbit-makecode#v1.0.1",
+        "Grove": "github:seeed-studio/pxt-grove#v0.5.0",
+        "Huskylens": "github:dfrobot/pxt-dfrobot_huskylens#v2.0.2",
+        "servo": "*"
     },
     "files": [
         "main.blocks",
         "main.ts",
-        "README.md"
+        "README.md",
+        "custom.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -17,5 +22,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
