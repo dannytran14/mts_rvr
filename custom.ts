@@ -123,7 +123,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Sonar_Pick_Up(): boolean {
-        if (grove.measureInCentimeters(DigitalPin.P1) <= 8) {
+        if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
         return true;
     }
     return false;
@@ -136,7 +136,7 @@ namespace MTS_RVR {
     //% group="MTS_Sonar"
     //% blockGap=8
     export function Sonar_Collison_Not_Detected (): boolean {
-    if (grove.measureInCentimeters(DigitalPin.P1) < 15) {
+    if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
         return false
     }
     return true
@@ -149,7 +149,7 @@ namespace MTS_RVR {
     //% group="MTS_Sonar"
     //% blockGap=8
     export function Sonar_Object_Not_Detected (): boolean {
-    if (grove.measureInCentimeters(DigitalPin.P1) < 25) {
+    if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
         return false
     }
     return true
