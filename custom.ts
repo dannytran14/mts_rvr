@@ -56,7 +56,7 @@ namespace MTS_RVR {
     //% group="MTS_Movement"
     //% blockGap=8
     //% block
-    export function Move_Forward_Slow_100() {
+    export function Move_Forward_Slow() {
         sphero.drive(40, 0)
         basic.pause(100)
     }
@@ -67,7 +67,7 @@ namespace MTS_RVR {
     //% group="MTS_Movement"
     //% blockGap=8
     //% block
-    export function Move_Foward_Fast_100(): void {
+    export function Move_Foward_Fast(): void {
         sphero.drive(40, 0)
         basic.pause(100)
     }
@@ -295,10 +295,10 @@ namespace MTS_RVR {
         Husky_Centre();
         Open_Gripper();
         while(Sonar_Object_Not_Detected()){
-            Move_Foward_Fast_100();
+            Move_Foward_Fast();
         }
         while(!Sonar_Pick_Up()){
-            Move_Forward_Slow_100();
+            Move_Forward_Slow();
         }
     }
 
