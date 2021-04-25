@@ -142,6 +142,19 @@ namespace MTS_RVR {
     return true
     }
 
+     /**
+     * The Sonar will return a true value once it detects that the RVR should slow down once it detects a collision ahead. 
+     */
+    //% block
+    //% group="MTS_Sonar"
+    //% blockGap=8
+    export function Sonar_Collison_Detected (): boolean {
+    if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
+        return true
+    }
+    return false
+    }
+
     /**
      * The Sonar will return a true value once it detects that the RVR should slow once it detects an object. 
      */
@@ -153,6 +166,19 @@ namespace MTS_RVR {
         return false
     }
     return true
+    }
+
+    /**
+     * The Sonar will return a true value once it detects that the RVR should slow once it detects an object. 
+     */
+    //% block
+    //% group="MTS_Sonar"
+    //% blockGap=8
+    export function Sonar_Object_Detected (): boolean {
+    if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
+        return true
+    }
+    return false
     }
 
     /**
