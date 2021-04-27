@@ -19,56 +19,12 @@ namespace MTS_RVR {
     /**
      * The RVR will perform a slow movement. 
      */
-    //% group="MTS_Movement_Only"
-    //% blockGap=8
-    //% block
-    export function Move_Forward_Slow_2000 () {
-        sphero.drive(40, 0)
-        basic.pause(2000)
-    }
-
-    /**
-     * The RVR will perform a fast movement. 
-     */
-    //% group="MTS_Movement_Only"
-    //% blockGap=8
-    //% block
-    export function Move_Forward_Fast_2000 (): void {
-        sphero.drive(40, 0)
-        basic.pause(2000)
-    }
-
-    /**
-     * The RVR will move in the heading specified. 
-     */
-    //% group="MTS_Movement_Only"
-    //% blockGap=8
-    //% block
-    //% heading.min=0 heading.max=359
-    export function Move_Backward_2000(): void {
-        sphero.drive(-40, 0)
-        basic.pause(2000)
-    }
-    
-    /**
-     * The RVR will perform a slow movement. 
-     */
     //% group="MTS_Movement"
     //% blockGap=8
     //% block
-    export function Move_Forward_Slow() {
-        sphero.drive(40, 0)
-        basic.pause(100)
-    }
-
-    /**
-     * The RVR will perform a fast movement. 
-     */
-    //% group="MTS_Movement"
-    //% blockGap=8
-    //% block
-    export function Move_Foward_Fast(): void {
-        sphero.drive(40, 0)
+    //% heading.min=-60 heading.max=60
+    export function Move(speed: number) :void {
+        sphero.drive(speed, 0)
         basic.pause(100)
     }
 
@@ -79,7 +35,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     //% heading.min=0 heading.max=359
-    export function Move_Forward_With_Heading(heading: number): void {
+    export function Turn(heading: number): void {
         degree += heading
         if (degree > 359){
             degree -= 360
@@ -87,11 +43,9 @@ namespace MTS_RVR {
         else if (degree < 0){
             degree += 360
         }
-        sphero.drive(40, degree)
-        basic.pause(2000)
+        sphero.drive(0, degree)
+        basic.pause(100)
     }
-
-    
 
     /**
      * The RVR will perform a small clockwise rotation. 
@@ -122,24 +76,11 @@ namespace MTS_RVR {
     //% group="MTS_Sonar"
     //% blockGap=8
     //% block
-    export function Sonar_Pick_Up(): boolean {
+    export function SR_Is_In_Pick_Up_Range(): boolean {
         if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
         return true;
     }
     return false;
-    }
-
-    /**
-     * The Sonar will return a true value once it detects that the RVR should slow down once it detects a collision ahead. 
-     */
-    //% block
-    //% group="MTS_Sonar"
-    //% blockGap=8
-    export function Sonar_Collison_Not_Detected (): boolean {
-    if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
-        return false
-    }
-    return true
     }
 
      /**
@@ -148,7 +89,7 @@ namespace MTS_RVR {
     //% block
     //% group="MTS_Sonar"
     //% blockGap=8
-    export function Sonar_Collison_Detected (): boolean {
+    export function SR_Is_Collision_Detected (): boolean {
     if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
         return true
     }
@@ -161,20 +102,7 @@ namespace MTS_RVR {
     //% block
     //% group="MTS_Sonar"
     //% blockGap=8
-    export function Sonar_Object_Not_Detected (): boolean {
-    if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
-        return false
-    }
-    return true
-    }
-
-    /**
-     * The Sonar will return a true value once it detects that the RVR should slow once it detects an object. 
-     */
-    //% block
-    //% group="MTS_Sonar"
-    //% blockGap=8
-    export function Sonar_Object_Detected (): boolean {
+    export function SR_Is_Object_Detected (): boolean {
     if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
         return true
     }
@@ -187,7 +115,7 @@ namespace MTS_RVR {
     //% group="MTS_HuskyLens"
     //% blockGap=8
     //% block
-    export function Husky_Centre(): void {
+    export function HL_Centre_Object_On_Screen(): void {
         let position : number;
         while (position < 140 || position > 180) {
             huskylens.request();
@@ -208,7 +136,7 @@ namespace MTS_RVR {
     //% block
     //% group="MTS_HuskyLens"
     //% blockGap=8
-    export function Husky_Locate () : boolean {
+    export function Is_Target_Located () : boolean {
         let position: number;
         huskylens.request();
         position = huskylens.readeBox_index(1, 1, Content1.xCenter);
@@ -318,13 +246,13 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Move_To_Object(): void {
-        Husky_Centre();
+        HL_Centre_Object_On_Screen();
         Open_Gripper();
-        while(Sonar_Object_Not_Detected()){
-            Move_Foward_Fast();
+        while(!(SR_Is_Object_Detected())){
+            Move(60);
         }
-        while(!Sonar_Pick_Up()){
-            Move_Forward_Slow();
+        while(!SR_Is_In_Pick_Up_Range()){
+            Move(30);
         }
     }
 
@@ -335,7 +263,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Find_Object(): void {
-        while(!Husky_Locate()){
+        while(!Is_Target_Located()){
             Rotate();
         }
         
