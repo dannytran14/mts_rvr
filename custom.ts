@@ -11,6 +11,7 @@ enum MyEnum {
     Two
 }
 let degree: number = 0
+let delay: number = 1500
 /**
  * Custom blocks
  */
@@ -24,8 +25,15 @@ namespace MTS_RVR {
     //% block
     //% speed.min=-60 speed.max=60
     export function Move(speed: number) :void {
-        sphero.drive(speed, 0)
-        basic.pause(100)
+        if (speed > 60){
+            speed = 60
+        }
+        else if (degree < -60){
+            speed = -60
+        }
+        sphero.drive(speed, degree)
+        basic.pause(delay)
+        delay = 1500
     }
 
     /**
@@ -44,7 +52,7 @@ namespace MTS_RVR {
             degree += 360
         }
         sphero.drive(0, degree)
-        basic.pause(100)
+        basic.pause(delay)
     }
 
     /**
@@ -56,7 +64,7 @@ namespace MTS_RVR {
     export function Rotate () {
         sphero.resetYaw()
         sphero.drive(0, 40)
-        basic.pause(100)
+        basic.pause(delay)
     }
 
     /**
@@ -77,6 +85,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function S_Is_In_Pick_Up_Range(): boolean {
+        delay = 100; 
         if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
         return true;
     }
@@ -90,6 +99,7 @@ namespace MTS_RVR {
     //% group="MTS_Sonar"
     //% blockGap=8
     export function S_Is_Collision_Detected (): boolean {
+        delay = 100
     if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
         return true
     }
@@ -103,6 +113,7 @@ namespace MTS_RVR {
     //% group="MTS_Sonar"
     //% blockGap=8
     export function S_Is_Object_Detected (): boolean {
+        delay = 100
     if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
         return true
     }
@@ -158,6 +169,7 @@ namespace MTS_RVR {
     //% group="MTS_HuskyLens"
     //% blockGap=8
     export function H_Is_Target_Located () : boolean {
+        delay = 100
         let position: number;
         huskylens.request();
         position = huskylens.readeBox_index(1, 1, Content1.xCenter);
@@ -175,6 +187,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function H_Is_Home_Located () {
+        delay = 100
         let position: number;
         huskylens.request();
         position = huskylens.readeBox_index(1, 1, Content1.xCenter);
@@ -224,10 +237,6 @@ namespace MTS_RVR {
     export function Open_Gripper () {
         servos.P0.setAngle(0)
     }
-
-    
-
-    
 
     /**
      * The RVR will pick up the object. 
