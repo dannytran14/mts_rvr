@@ -22,7 +22,7 @@ namespace MTS_RVR {
     //% group="MTS_Movement"
     //% blockGap=8
     //% block
-    //% heading.min=-60 heading.max=60
+    //% speed.min=-60 speed.max=60
     export function Move(speed: number) :void {
         sphero.drive(speed, 0)
         basic.pause(100)
@@ -34,7 +34,7 @@ namespace MTS_RVR {
     //% group="MTS_Movement"
     //% blockGap=8
     //% block
-    //% heading.min=0 heading.max=359
+    //% heading.min=-180 heading.max=180
     export function Turn(heading: number): void {
         degree += heading
         if (degree > 359){
