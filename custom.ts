@@ -76,7 +76,7 @@ namespace MTS_RVR {
     //% group="MTS_Sonar"
     //% blockGap=8
     //% block
-    export function SR_Is_In_Pick_Up_Range(): boolean {
+    export function S_Is_In_Pick_Up_Range(): boolean {
         if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
         return true;
     }
@@ -89,7 +89,7 @@ namespace MTS_RVR {
     //% block
     //% group="MTS_Sonar"
     //% blockGap=8
-    export function SR_Is_Collision_Detected (): boolean {
+    export function S_Is_Collision_Detected (): boolean {
     if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
         return true
     }
@@ -102,11 +102,32 @@ namespace MTS_RVR {
     //% block
     //% group="MTS_Sonar"
     //% blockGap=8
-    export function SR_Is_Object_Detected (): boolean {
+    export function S_Is_Object_Detected (): boolean {
     if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
         return true
     }
     return false
+    }
+    
+    /**
+     * Changes the HuskyLens to object tracking mode. 
+     */
+    //% group="Initialise"
+    //% blockGap=8
+    //% block
+    export function Object_Tracking_Mode(): void {
+        huskylens.initI2c()
+        huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
+    }
+
+    /**
+     * Changes the HuskyLens to tag recognition mode
+     */
+    //% group="Initialise"
+    //% blockGap=8
+    //% block
+    export function Tag_Tracking_Mode(): void {
+        huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
     }
 
     /**
@@ -115,7 +136,7 @@ namespace MTS_RVR {
     //% group="MTS_HuskyLens"
     //% blockGap=8
     //% block
-    export function HL_Centre_Object_On_Screen(): void {
+    export function H_Centre_Object_On_Screen(): void {
         let position : number;
         while (position < 140 || position > 180) {
             huskylens.request();
@@ -136,7 +157,24 @@ namespace MTS_RVR {
     //% block
     //% group="MTS_HuskyLens"
     //% blockGap=8
-    export function Is_Target_Located () : boolean {
+    export function H_Is_Target_Located () : boolean {
+        let position: number;
+        huskylens.request();
+        position = huskylens.readeBox_index(1, 1, Content1.xCenter);
+        if (position == -1) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+     /**
+     * HuskyLens checks whether home has been located.
+     */
+    //% group="MTS_HuskyLens"
+    //% blockGap=8
+    //% block
+    export function H_Is_Home_Located () {
         let position: number;
         huskylens.request();
         position = huskylens.readeBox_index(1, 1, Content1.xCenter);
@@ -187,16 +225,9 @@ namespace MTS_RVR {
         servos.P0.setAngle(0)
     }
 
-    /**
-     * Intialises all values and variables before the program begins. 
-     */
-    //% group="Initialise"
-    //% blockGap=8
-    //% block
-    export function Initialise(): void {
-        huskylens.initI2c()
-        huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
-    }
+    
+
+    
 
     /**
      * The RVR will pick up the object. 
@@ -229,15 +260,7 @@ namespace MTS_RVR {
         sphero.drive(40, 180)
     }
     
-     /**
-     * Set husky lens target to home tag recognition. 
-     */
-    //% group="Simplified Functions"
-    //% blockGap=8
-    //% block
-    export function target_home () {
-    huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
-    }
+    
 
     /**
      * The RVR will centre its positioning relate to the object, and move towards it. 
@@ -246,12 +269,12 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Move_To_Object(): void {
-        HL_Centre_Object_On_Screen();
+        H_Centre_Object_On_Screen();
         Open_Gripper();
-        while(!(SR_Is_Object_Detected())){
+        while(!(S_Is_Object_Detected())){
             Move(60);
         }
-        while(!SR_Is_In_Pick_Up_Range()){
+        while(!S_Is_In_Pick_Up_Range()){
             Move(30);
         }
     }
@@ -263,7 +286,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Find_Object(): void {
-        while(!Is_Target_Located()){
+        while(!H_Is_Target_Located()){
             Rotate();
         }
         
