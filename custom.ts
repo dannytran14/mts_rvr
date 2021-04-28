@@ -72,7 +72,7 @@ namespace MTS_RVR {
     //% block
     //% heading.min=0 heading.max=359
     export function Stop(): void {
-        sphero.drive(0, 0)
+        sphero.drive(0, degree)
     } 
 
     /**
