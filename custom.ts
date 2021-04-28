@@ -28,9 +28,6 @@ namespace MTS_RVR {
         if (speed > 60){
             speed = 60
         }
-        else if (degree < -60){
-            speed = -60
-        }
         sphero.drive(speed, degree)
         basic.pause(delay)
         delay = 1500
