@@ -1,9 +1,16 @@
+let position = 0
 input.onButtonPressed(Button.A, function () {
     MTS_RVR.Object_Tracking_Mode()
-    while (!(MTS_RVR.H_Is_Target_Located())) {
-        MTS_RVR.Turn(26)
-    }
-    sphero.setAllLeds(0, 255, 0)
-    MTS_RVR.H_Centre_Object_On_Screen()
-    sphero.setAllLeds(0, 0, 255)
+    huskylens.request()
+    position = huskylens.readeBox_index(1, 7, Content1.xCenter)
+    basic.showNumber(position)
+})
+input.onButtonPressed(Button.B, function () {
+    MTS_RVR.Tag_Tracking_Mode()
+    huskylens.request()
+    position = huskylens.readeBox_index(1, 7, Content1.xCenter)
+    basic.showNumber(position)
+})
+basic.forever(function () {
+	
 })

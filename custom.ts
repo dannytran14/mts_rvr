@@ -116,6 +116,7 @@ namespace MTS_RVR {
     export function Object_Tracking_Mode(): void {
         huskylens.initI2c()
         huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
+        let position = 0
     }
 
     /**
@@ -127,6 +128,7 @@ namespace MTS_RVR {
     export function Tag_Tracking_Mode(): void {
         huskylens.initI2c()
         huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
+        let position = 0
     }
 
     /**
