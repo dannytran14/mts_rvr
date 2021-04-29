@@ -1,16 +1,13 @@
-let position = 0
 input.onButtonPressed(Button.A, function () {
-    MTS_RVR.Object_Tracking_Mode()
-    huskylens.request()
-    position = huskylens.readeBox_index(1, 7, Content1.xCenter)
-    basic.showNumber(position)
+    huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
+})
+input.onButtonPressed(Button.AB, function () {
+    huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
 })
 input.onButtonPressed(Button.B, function () {
-    MTS_RVR.Tag_Tracking_Mode()
     huskylens.request()
-    position = huskylens.readeBox_index(1, 7, Content1.xCenter)
+    position = huskylens.readeBox_index(1, 1, Content1.xCenter)
     basic.showNumber(position)
 })
-basic.forever(function () {
-	
-})
+let position = 0
+huskylens.initI2c()

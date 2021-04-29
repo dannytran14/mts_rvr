@@ -106,7 +106,17 @@ namespace MTS_RVR {
     }
     return false
     }
-    
+
+    /**
+     * Changes the HuskyLens to object tracking mode. 
+     */
+    //% group="Initialise"
+    //% blockGap=8
+    //% block
+    export function Husky_Start_Up(): void {
+        huskylens.initI2c()
+    }
+
     /**
      * Changes the HuskyLens to object tracking mode. 
      */
@@ -114,7 +124,6 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Object_Tracking_Mode(): void {
-        huskylens.initI2c()
         huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
         let position = 0
     }
@@ -126,7 +135,6 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Tag_Tracking_Mode(): void {
-        huskylens.initI2c()
         huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
         let position = 0
     }
@@ -142,14 +150,13 @@ namespace MTS_RVR {
         while (position < 140 || position > 180) {
             huskylens.request();
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
+            huskylens.writeOSD(position.toString(), 150, 30)
             if (position > 180) {
-                //degree += 25
-                //sphero.drive(0, degree);
-                sphero.setRgbLedByIndex(sphero.LEDs.rightHeadlight, 0, 255, 0)
+                degree += 25
+                sphero.drive(0, degree);
             } else {
-                //degree -= 25
-                //sphero.drive(0, degree);
-                sphero.setRgbLedByIndex(sphero.LEDs.rightHeadlight, 0, 0, 255)
+                degree -= 25
+                sphero.drive(0, degree);
             }
             basic.pause(300);
         }
