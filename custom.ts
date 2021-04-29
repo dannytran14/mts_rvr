@@ -140,11 +140,12 @@ namespace MTS_RVR {
         while (position < 140 || position > 180) {
             huskylens.request();
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
-            sphero.resetYaw();
             if (position > 180) {
-                sphero.drive(0, 25);
+                degree += 25
+                sphero.drive(0, degree);
             } else {
-                sphero.drive(0, -25);
+                degree -= 25
+                sphero.drive(0, degree);
             }
             basic.pause(300);
         }
