@@ -141,13 +141,15 @@ namespace MTS_RVR {
             huskylens.request();
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
             if (position > 180) {
-                degree += 25
-                sphero.drive(0, degree);
+                //degree += 25
+                //sphero.drive(0, degree);
+                sphero.setRgbLedByIndex(sphero.LEDs.rightHeadlight, 0, 255, 0)
             } else {
-                degree -= 25
-                sphero.drive(0, degree);
+                //degree -= 25
+                //sphero.drive(0, degree);
+                sphero.setRgbLedByIndex(sphero.LEDs.rightHeadlight, 0, 0, 255)
             }
-            basic.pause(1000);
+            basic.pause(300);
         }
     }
 
