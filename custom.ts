@@ -30,7 +30,6 @@ namespace MTS_RVR {
         }
         sphero.drive(speed, degree)
         basic.pause(delay)
-        delay = 1500
     }
 
     /**
@@ -49,19 +48,7 @@ namespace MTS_RVR {
             degree += 360
         }
         sphero.drive(0, degree)
-        basic.pause(delay)
-    }
-
-    /**
-     * The RVR will perform a small clockwise rotation. 
-     */
-    //% group="MTS_Movement"
-    //% blockGap=8
-    //% block
-    export function Rotate () {
-        sphero.resetYaw()
-        sphero.drive(0, 40)
-        basic.pause(delay)
+        basic.pause(1000)
     }
 
     /**
@@ -85,7 +72,8 @@ namespace MTS_RVR {
         delay = 100; 
         if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
         return true;
-    }
+        delay = 1500
+        }
     return false;
     }
 
@@ -99,6 +87,7 @@ namespace MTS_RVR {
         delay = 100
     if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
         return true
+        delay = 1500
     }
     return false
     }
@@ -113,6 +102,7 @@ namespace MTS_RVR {
         delay = 100
     if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
         return true
+        delay = 1500
     }
     return false
     }
@@ -135,6 +125,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Tag_Tracking_Mode(): void {
+        huskylens.initI2c()
         huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
     }
 
@@ -174,6 +165,7 @@ namespace MTS_RVR {
             return false
         } else {
             return true
+            delay = 1500
         }
     }
 
@@ -192,6 +184,7 @@ namespace MTS_RVR {
             return false
         } else {
             return true
+            delay = 1500
         }
     }
 
@@ -293,7 +286,7 @@ namespace MTS_RVR {
     //% block
     export function Find_Object(): void {
         while(!H_Is_Target_Located()){
-            Rotate();
+            Turn(20)
         }
         
     }

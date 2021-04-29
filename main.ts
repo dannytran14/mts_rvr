@@ -1,7 +1,6 @@
 input.onButtonPressed(Button.A, function () {
-    MTS_RVR.Move(60)
-    MTS_RVR.Turn(180)
-    basic.pause(1000)
-    MTS_RVR.Move(30)
-    MTS_RVR.Stop()
+    MTS_RVR.Object_Tracking_Mode()
+    while (!(MTS_RVR.H_Is_Target_Located())) {
+        MTS_RVR.Turn(26)
+    }
 })
