@@ -147,7 +147,7 @@ namespace MTS_RVR {
                 degree -= 25
                 sphero.drive(0, degree);
             }
-            basic.pause(300);
+            basic.pause(1000);
         }
     }
 
