@@ -47,9 +47,30 @@ namespace MTS_RVR {
         else if (degree < 0){
             degree += 360
         }
+        basic.showNumber(degree)
         sphero.drive(0, degree)
         basic.pause(1000)
     }
+
+    /**
+     * The RVR will move in the heading specified. 
+     */
+    //% group="MTS_Movement"
+    //% blockGap=8
+    //% block
+    //% heading.min=-180 heading.max=180
+    export function testMovement(speed: number, heading: number): void {
+        degree += heading
+        if (degree > 359){
+            degree -= 360
+        }
+        else if (degree < 0){
+            degree += 360
+        }
+        sphero.drive(speed, degree)
+        basic.pause(1000)
+    }
+
 
     /**
      * The RVR will stop.  
@@ -85,7 +106,7 @@ namespace MTS_RVR {
     //% blockGap=8
     export function S_Is_Collision_Detected (): boolean {
         delay = 100
-    if (grove.measureInCentimeters(DigitalPin.P15) < 15) {
+    if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
         return true
         delay = 1500
     }
@@ -100,7 +121,7 @@ namespace MTS_RVR {
     //% blockGap=8
     export function S_Is_Object_Detected (): boolean {
         delay = 100
-    if (grove.measureInCentimeters(DigitalPin.P15) < 25) {
+    if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
         return true
         delay = 1500
     }
@@ -147,18 +168,20 @@ namespace MTS_RVR {
     //% block
     export function H_Centre_Object_On_Screen(): void {
         let position : number;
-        while (position < 140 || position > 180) {
+        huskylens.request();
+        position = huskylens.readeBox_index(1, 1, Content1.xCenter);
+        while (position < 150 || position > 170) {
             huskylens.request();
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
             huskylens.writeOSD(position.toString(), 150, 30)
-            if (position > 180) {
-                degree += 25
+            if (position > 150) {
+                degree -= 5
                 sphero.drive(0, degree);
-            } else {
-                degree -= 25
+            } else if (position < 170) {
+                degree += 5
                 sphero.drive(0, degree);
             }
-            basic.pause(300);
+            basic.pause(1000);
         }
     }
 
