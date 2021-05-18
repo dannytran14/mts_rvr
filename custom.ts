@@ -53,26 +53,6 @@ namespace MTS_RVR {
     }
 
     /**
-     * The RVR will move in the heading specified. 
-     */
-    //% group="MTS_Movement"
-    //% blockGap=8
-    //% block
-    //% heading.min=-180 heading.max=180
-    export function testMovement(speed: number, heading: number): void {
-        degree += heading
-        if (degree > 359){
-            degree -= 360
-        }
-        else if (degree < 0){
-            degree += 360
-        }
-        sphero.drive(speed, degree)
-        basic.pause(1000)
-    }
-
-
-    /**
      * The RVR will stop.  
      */
     //% group="MTS_Movement"
@@ -174,14 +154,24 @@ namespace MTS_RVR {
             huskylens.request();
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
             huskylens.writeOSD(position.toString(), 150, 30)
-            if (position > 150) {
-                degree -= 5
-                sphero.drive(0, degree);
-            } else if (position < 170) {
-                degree += 5
-                sphero.drive(0, degree);
+            if (position < 130) {
+                MTS_RVR.Turn(10)
+            } 
+            else{
+                if (position < 150){
+                    MTS_RVR.Turn(-5)
+                }
+                if (position > 190){
+                    MTS_RVR.Turn(-10)
+                }
+                else {
+                    if (position > 170){
+                        MTS_RVR.Turn(-5)
+                    }
+                }
             }
-            basic.pause(1000);
+        basic.pause(300);
+        huskylens.request()
         }
     }
 
@@ -231,6 +221,8 @@ namespace MTS_RVR {
     //% block
     export function Move_Arm_In(): void {
         servos.P1.setAngle(0);
+        basic.pause(1000)
+        pins.digitalWritePin(DigitalPin.P1, 0)
     }
 
     /**
@@ -240,7 +232,9 @@ namespace MTS_RVR {
     //% group="MTS_Arm_Control"
     //% blockGap=8
     export function Close_Gripper(): void {
-        servos.P0.setAngle(180);
+        servos.P0.setAngle(140)
+        basic.pause(1000)
+        pins.digitalWritePin(DigitalPin.P0, 0)
     }
 
     /**
@@ -251,6 +245,8 @@ namespace MTS_RVR {
     //% block
     export function Move_Arm_Out(): void {
         servos.P1.setAngle(90)
+        basic.pause(1000)
+        pins.digitalWritePin(DigitalPin.P1, 0)
     }
 
     /**
@@ -261,69 +257,8 @@ namespace MTS_RVR {
     //% block
     export function Open_Gripper () {
         servos.P0.setAngle(0)
-    }
-
-    /**
-     * The RVR will pick up the object. 
-     */
-    //% group="Simplified Functions"
-    //% blockGap=8
-    //% block
-    export function Pick_Up_Object(): void {
-        Close_Gripper()
-    }
-
-    /**
-     * The RVR will drop the object. 
-     */
-    //% group="Simplified Functions"
-    //% blockGap=8
-    //% block
-    export function Drop_Object(): void {
-        Open_Gripper()
-    }
-
-    /**
-     * The RVR will return back to its starting position. 
-     */
-    //% group="Simplified Functions"
-    //% blockGap=8
-    //% block
-    export function Return_Home(): void {
-        sphero.resetYaw()
-        sphero.drive(40, 180)
-    }
-    
-    
-
-    /**
-     * The RVR will centre its positioning relate to the object, and move towards it. 
-     */
-    //% group="Simplified Functions"
-    //% blockGap=8
-    //% block
-    export function Move_To_Object(): void {
-        H_Centre_Object_On_Screen();
-        Open_Gripper();
-        while(!(S_Is_Object_Detected())){
-            Move(60);
-        }
-        while(!S_Is_In_Pick_Up_Range()){
-            Move(30);
-        }
-    }
-
-    /**
-     * The RVR will rotate until the HuskyLens recognises the object on its screen.
-     */
-    //% group="Simplified Functions"
-    //% blockGap=8
-    //% block
-    export function Find_Object(): void {
-        while(!H_Is_Target_Located()){
-            Turn(20)
-        }
-        
+        basic.pause(1000)
+        pins.digitalWritePin(DigitalPin.P0, 0)
     }
 }
 
