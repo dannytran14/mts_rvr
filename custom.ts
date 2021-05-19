@@ -155,18 +155,18 @@ namespace MTS_RVR {
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
             huskylens.writeOSD(position.toString(), 150, 30)
             if (position < 130) {
-                MTS_RVR.Turn(10)
+                MTS_RVR.Turn(-10)
             } 
             else{
                 if (position < 150){
                     MTS_RVR.Turn(-5)
                 }
                 if (position > 190){
-                    MTS_RVR.Turn(-10)
+                    MTS_RVR.Turn(10)
                 }
                 else {
                     if (position > 170){
-                        MTS_RVR.Turn(-5)
+                        MTS_RVR.Turn(5)
                     }
                 }
             }
