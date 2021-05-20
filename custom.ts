@@ -87,8 +87,9 @@ namespace MTS_RVR {
     export function S_Is_Collision_Detected (): boolean {
         delay = 100
     if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
-        return true
         delay = 1500
+        return true
+        
     }
     return false
     }
@@ -102,8 +103,8 @@ namespace MTS_RVR {
     export function S_Is_Object_Detected (): boolean {
         delay = 100
     if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
-        return true
         delay = 1500
+        return true
     }
     return false
     }
@@ -116,6 +117,7 @@ namespace MTS_RVR {
     //% block
     export function Husky_Start_Up(): void {
         huskylens.initI2c()
+        huskylens.request();
     }
 
     /**
