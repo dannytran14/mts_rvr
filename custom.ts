@@ -118,6 +118,7 @@ namespace MTS_RVR {
     export function Husky_Start_Up(): void {
         huskylens.initI2c()
         huskylens.request();
+        huskylens.readeBox_index(1, 1, Content1.xCenter);
     }
 
     /**
