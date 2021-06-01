@@ -4,25 +4,37 @@
  * Read more at https://makecode.microbit.org/blocks/custom
  */
 
-enum MyEnum {
-    //% block="one"
-    One,
-    //% block="two"
-    Two
+enum HasNot {
+    Has_Not, 
+    Has
+}
+
+enum Colour{
+    Red, 
+    Green, 
+    Blue, 
+    Orange, 
+    Yellow, 
+    Pink, 
+    Purple, 
+    Brown, 
+    Black, 
+    White
 }
 let degree: number = 0
 let delay: number = 1500
+let position: number = -1
 /**
  * Custom blocks
  */
-//% weight=100 color=#000000 icon=""
+//% weight=1000 color=#000000 icon=""
 namespace MTS_RVR {
     /**
      * The RVR will perform a slow movement. 
      */
-    //% group="MTS_Movement"
+    //% subcategory=Movement
     //% blockGap=8
-    //% block
+    //% block="move at speed $speed"
     //% speed.min=-60 speed.max=60
     export function Move(speed: number) :void {
         if (speed > 60){
@@ -35,9 +47,9 @@ namespace MTS_RVR {
     /**
      * The RVR will move in the heading specified. 
      */
-    //% group="MTS_Movement"
+    //% subcategory=Movement
     //% blockGap=8
-    //% block
+    //% block="turn %heading degrees"
     //% heading.min=-180 heading.max=180
     export function Turn(heading: number): void {
         degree += heading
@@ -47,7 +59,6 @@ namespace MTS_RVR {
         else if (degree < 0){
             degree += 360
         }
-        basic.showNumber(degree)
         sphero.drive(0, degree)
         basic.pause(1000)
     }
@@ -55,7 +66,7 @@ namespace MTS_RVR {
     /**
      * The RVR will stop.  
      */
-    //% group="MTS_Movement"
+    //% subcategory=Movement
     //% blockGap=8
     //% block
     //% heading.min=0 heading.max=359
@@ -66,94 +77,130 @@ namespace MTS_RVR {
     /**
      * Will return a true value once the RVR has reached its pick up distance. 
      */
-    //% group="MTS_Sonar"
+    //% subcategory=Sonar
     //% blockGap=8
-    //% block
-    export function S_Is_In_Pick_Up_Range(): boolean {
+    //% block="sonar %not detected pick up range"
+    export function SonarPickUpRange(not: HasNot): boolean {
         delay = 100; 
-        if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
-        return true;
-        delay = 1500
+        if (not == HasNot.Has) {
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
+            return true;
+            }
+            else
+                return false
         }
-    return false;
+        else{
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
+            return false;
+            }
+            else{
+                return true
+            }
+        }
+
     }
 
      /**
      * The Sonar will return a true value once it detects that the RVR should slow down once it detects a collision ahead. 
      */
-    //% block
-    //% group="MTS_Sonar"
+    //% block="sonar %not detected a collision"
+    //% subcategory=Sonar
     //% blockGap=8
-    export function S_Is_Collision_Detected (): boolean {
-        delay = 100
-    if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
-        delay = 1500
-        return true
-        
-    }
-    return false
+    export function SonarCollision(not: HasNot): boolean {
+        delay = 100; 
+        if (not == HasNot.Has) {
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
+            return true;
+            }
+            else
+                return false
+        }
+        else{
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
+            return false;
+            }
+            else{
+                return true
+            }
+        }
     }
 
     /**
      * The Sonar will return a true value once it detects that the RVR should slow once it detects an object. 
      */
-    //% block
-    //% group="MTS_Sonar"
+    //% block="sonar %not detected an object"
+    //% subcategory=Sonar
     //% blockGap=8
-    export function S_Is_Object_Detected (): boolean {
-        delay = 100
-    if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
+    export function SonarObject (not: HasNot): boolean {
+        delay = 100; 
+        if (not == HasNot.Has) {
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
+            return true;
+            }
+            else
+                return false
+        }
+        else{
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
+            return false;
+            }
+            else{
+                return true
+            }
+        }
+    }
+
+    /**
+     * Changes the HuskyLens to object tracking mode. 
+     */
+    //% subcategory=Initialise
+    //% blockGap=8
+    //% block="start up"
+    export function Start_Up(): void {
+        sphero.resetYaw()
+        //huskylens.initI2c()
+        //huskylens.request();
+        //huskylens.readeBox_index(1, 1, Content1.xCenter);
+        position = -1
+        degree = 0
         delay = 1500
-        return true
-    }
-    return false
     }
 
     /**
      * Changes the HuskyLens to object tracking mode. 
      */
-    //% group="Initialise"
+    //% subcategory=Initialise
     //% blockGap=8
-    //% block
-    export function Husky_Start_Up(): void {
-        huskylens.initI2c()
-        huskylens.request();
-        huskylens.readeBox_index(1, 1, Content1.xCenter);
-    }
-
-    /**
-     * Changes the HuskyLens to object tracking mode. 
-     */
-    //% group="Initialise"
-    //% blockGap=8
-    //% block
+    //% block="change to object tracking"
     export function Object_Tracking_Mode(): void {
         huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
-        let position = 0
+        huskylens.request()
+        huskylens.request()
     }
 
     /**
      * Changes the HuskyLens to tag recognition mode
      */
-    //% group="Initialise"
+    //% subcategory=Initialise
     //% blockGap=8
-    //% block
+    //% block="change to tag tracking"
     export function Tag_Tracking_Mode(): void {
         huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
-        let position = 0
+        huskylens.request()
+        huskylens.request()
     }
 
     /**
      * The RVR will rotate until the object is centred on the HuskyLens. 
      */
-    //% group="MTS_HuskyLens"
+    //% subcategory=HuskyLens
     //% blockGap=8
-    //% block
+    //% block="centre object on screen"
     export function H_Centre_Object_On_Screen(): void {
         let position : number;
         huskylens.request();
         position = huskylens.readeBox_index(1, 1, Content1.xCenter);
-        while (position < 150 || position > 170) {
+        while ((position < 150 || position > 170) && position != -1) {
             huskylens.request();
             position = huskylens.readeBox_index(1, 1, Content1.xCenter);
             huskylens.writeOSD(position.toString(), 150, 30)
@@ -181,86 +228,100 @@ namespace MTS_RVR {
     /**
      * The HuskyLens will return a true value once a object is detected its screen. 
      */
-    //% block
-    //% group="MTS_HuskyLens"
+    //% block="husky %not located object"
+    //% subcategory=HuskyLens
     //% blockGap=8
-    export function H_Is_Target_Located () : boolean {
+    export function HuskyTargetLocated (not: HasNot) : boolean {
         delay = 100
         let position: number;
         huskylens.request();
-        position = huskylens.readeBox_index(1, 1, Content1.xCenter);
-        if (position == -1) {
-            return false
-        } else {
-            return true
-            delay = 1500
+        position = huskylens.readBox_s(Content3.xCenter)
+        if (not == HasNot.Has){
+            if (position == -1) 
+                return false
+            else 
+                return true
+        }   
+        else{
+            if (position == -1) 
+                return true
+            else 
+                return false
         }
     }
 
      /**
      * HuskyLens checks whether home has been located.
      */
-    //% group="MTS_HuskyLens"
+    //% subcategory=HuskyLens
     //% blockGap=8
-    //% block
-    export function H_Is_Home_Located () {
+    //% block="husky %not located home "
+    export function HuskyHomeLocated (not: HasNot) {
         delay = 100
         let position: number;
         huskylens.request();
-        position = huskylens.readeBox_index(1, 1, Content1.xCenter);
-        if (position == -1) {
-            return false
-        } else {
-            return true
-            delay = 1500
+        position = huskylens.readBox_s(Content3.xCenter)
+        if (not == HasNot.Has){
+            if (position == -1) 
+                return false
+            else 
+                return true
+        }   
+        else{
+            if (position == -1) 
+                return true
+            else 
+                return false
         }
     }
 
     /**
      * The arm will rotate out from its fold in position, in preparation for picking up an object. 
      */
-    //% group="MTS_Arm_Control"
+    //% subcategory=Arm
     //% blockGap=8
-    //% block
+    //% block="move arm up"
     export function Move_Arm_In(): void {
-        servos.P1.setAngle(0);
-        basic.pause(1000)
+        servos.P1.setAngle(0)
+        basic.pause(500)
         pins.digitalWritePin(DigitalPin.P1, 0)
+        servos.P0.setAngle(110)
     }
 
     /**
      * The RVR Gripper will close. 
      */
-    //% block
-    //% group="MTS_Arm_Control"
+    //% block="close gripper"
+    //% subcategory=Arm
     //% blockGap=8
     export function Close_Gripper(): void {
-        servos.P0.setAngle(140)
-        basic.pause(1000)
+        servos.P0.setAngle(110)
+        basic.pause(500)
         pins.digitalWritePin(DigitalPin.P0, 0)
     }
 
     /**
      * The RVR will swing the arm out from its folding position. 
      */
-    //% group="MTS_Arm_Control"
+    //% subcategory=Arm
     //% blockGap=8
-    //% block
+    //% block="move arm down"
     export function Move_Arm_Out(): void {
+        pins.digitalWritePin(DigitalPin.P0, 0)
         servos.P1.setAngle(90)
-        basic.pause(1000)
+        basic.pause(500)
         pins.digitalWritePin(DigitalPin.P1, 0)
     }
 
     /**
      * The RVR Gripper will open. 
      */
-    //% group="MTS_Arm_Control"
+    //% subcategory=Arm
     //% blockGap=8
-    //% block
+    //% block="open gripper"
     export function Open_Gripper () {
         servos.P0.setAngle(0)
-        basic.pause(1000)
+        basic.pause(500)
         pins.digitalWritePin(DigitalPin.P0, 0)
     }
 }
