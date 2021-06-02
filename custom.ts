@@ -30,6 +30,57 @@ let position: number = -1
 //% weight=1000 color=#000000 icon=""
 namespace MTS_RVR {
     /**
+     * Changes the HuskyLens to object tracking mode. 
+     */
+    //% subcategory=Initialise
+    //% blockGap=8
+    //% block="start up"
+    export function Start_Up(): void {
+        sphero.resetYaw()
+        //huskylens.initI2c()
+        //huskylens.request();
+        //huskylens.readeBox_index(1, 1, Content1.xCenter);
+        position = -1
+        degree = 0
+        delay = 1500
+        sphero.setAllLeds(255, 250, 147)
+        basic.pause(1000)
+    }
+
+    /**
+     * Changes the HuskyLens to object tracking mode. 
+     */
+    //% subcategory=Initialise
+    //% blockGap=8
+    //% block="change to object tracking"
+    export function Object_Tracking_Mode(): void {
+        huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
+        huskylens.request()
+        huskylens.request()
+    }
+
+    /**
+     * Changes the HuskyLens to tag recognition mode
+     */
+    //% subcategory=Initialise
+    //% blockGap=8
+    //% block="change to tag tracking"
+    export function Tag_Tracking_Mode(): void {
+        huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
+        huskylens.request()
+        huskylens.request()
+    }
+    /**
+     * Changes the HuskyLens to tag recognition mode
+     */
+    //% subcategory=Initialise
+    //% blockGap=8
+    //% block
+    export function Output(): void {
+        huskylens.writeOSD(delay.toString(), 150, 30)
+    }
+    
+    /**
      * The RVR will perform a slow movement. 
      */
     //% subcategory=Movement
@@ -150,45 +201,7 @@ namespace MTS_RVR {
         }
     }
 
-    /**
-     * Changes the HuskyLens to object tracking mode. 
-     */
-    //% subcategory=Initialise
-    //% blockGap=8
-    //% block="start up"
-    export function Start_Up(): void {
-        sphero.resetYaw()
-        //huskylens.initI2c()
-        //huskylens.request();
-        //huskylens.readeBox_index(1, 1, Content1.xCenter);
-        position = -1
-        degree = 0
-        delay = 1500
-    }
-
-    /**
-     * Changes the HuskyLens to object tracking mode. 
-     */
-    //% subcategory=Initialise
-    //% blockGap=8
-    //% block="change to object tracking"
-    export function Object_Tracking_Mode(): void {
-        huskylens.initMode(protocolAlgorithm.ALGORITHM_OBJECT_TRACKING)
-        huskylens.request()
-        huskylens.request()
-    }
-
-    /**
-     * Changes the HuskyLens to tag recognition mode
-     */
-    //% subcategory=Initialise
-    //% blockGap=8
-    //% block="change to tag tracking"
-    export function Tag_Tracking_Mode(): void {
-        huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
-        huskylens.request()
-        huskylens.request()
-    }
+    
 
     /**
      * The RVR will rotate until the object is centred on the HuskyLens. 
@@ -198,30 +211,27 @@ namespace MTS_RVR {
     //% block="centre object on screen"
     export function H_Centre_Object_On_Screen(): void {
         let position : number;
-        huskylens.request();
-        position = huskylens.readeBox_index(1, 1, Content1.xCenter);
-        while ((position < 150 || position > 170) && position != -1) {
-            huskylens.request();
-            position = huskylens.readeBox_index(1, 1, Content1.xCenter);
-            huskylens.writeOSD(position.toString(), 150, 30)
-            if (position < 130) {
-                MTS_RVR.Turn(-10)
-            } 
-            else{
-                if (position < 150){
-                    MTS_RVR.Turn(-5)
-                }
-                if (position > 190){
-                    MTS_RVR.Turn(10)
-                }
-                else {
-                    if (position > 170){
-                        MTS_RVR.Turn(5)
-                    }
-                }
-            }
-        basic.pause(300);
         huskylens.request()
+        position = huskylens.readBox_s(Content3.xCenter)
+        while ((position < 145 || position > 175) && position != -1) {
+            position = huskylens.readBox_s(Content3.xCenter)
+            huskylens.writeOSD(position.toString(), 150, 30)
+            huskylens.request()
+            if (position < 90) {
+                MTS_RVR.Turn(-15)
+            } else if (position < 120) {
+                MTS_RVR.Turn(-10)
+            } else if (position < 145) {
+                MTS_RVR.Turn(-5)
+            } else if (position > 230) {
+                MTS_RVR.Turn(15)
+            } else if (position > 200) {
+                MTS_RVR.Turn(10)
+            } else if (position > 175) {
+                MTS_RVR.Turn(5)
+            }
+            basic.pause(300)
+            huskylens.request()
         }
     }
 
