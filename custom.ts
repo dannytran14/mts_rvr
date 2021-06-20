@@ -50,7 +50,7 @@ namespace MTS_RVR {
     /**
      * Changes the HuskyLens to object tracking mode. 
      */
-    //% subcategory=Initialise
+    //% subcategory=HuskyLens
     //% blockGap=8
     //% block="change to object tracking"
     export function Object_Tracking_Mode(): void {
@@ -62,9 +62,9 @@ namespace MTS_RVR {
     /**
      * Changes the HuskyLens to tag recognition mode
      */
-    //% subcategory=Initialise
+    //% subcategory=HuskyLens
     //% blockGap=8
-    //% block="change to tag tracking"
+    //% block="change to tag recognition"
     export function Tag_Tracking_Mode(): void {
         huskylens.initMode(protocolAlgorithm.ALGORITHM_TAG_RECOGNITION)
         huskylens.request()
@@ -86,8 +86,9 @@ namespace MTS_RVR {
     //% subcategory=Movement
     //% blockGap=8
     //% block="move at speed $speed"
-    //% speed.min=-60 speed.max=60
-    export function Move(speed: number) :void {
+    //% speed.min=-1 speed.max=10
+    export function Move(input: number) :void {
+        let speed = input * 6;
         if (speed > 60){
             speed = 60
         }
@@ -292,7 +293,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block="move arm up"
     export function Move_Arm_In(): void {
-        servos.P1.setAngle(0)
+        servos.P1.setAngle(20)
         basic.pause(500)
         pins.digitalWritePin(DigitalPin.P1, 0)
         servos.P0.setAngle(110)
@@ -333,6 +334,57 @@ namespace MTS_RVR {
         servos.P0.setAngle(0)
         basic.pause(500)
         pins.digitalWritePin(DigitalPin.P0, 0)
+    }
+
+    /**
+     * The RVR Gripper will open. 
+     */
+    //% subcategory=Light
+    //% blockGap=8
+    //% block="change light colour to $colour"
+    export function Light (colour : Colour) {
+        switch(colour){
+            case Colour.Black:{
+                sphero.setAllLeds(0, 0, 0)
+                break
+            }
+            case Colour.Blue:{
+                sphero.setAllLeds(0, 0, 255)
+                break
+            }
+            case Colour.Brown:{
+                sphero.setAllLeds(139, 69, 19)
+                break
+            }
+            case Colour.Green:{
+                sphero.setAllLeds(0, 255, 0)
+                break
+            }
+            case Colour.Orange:{
+                sphero.setAllLeds(255, 140, 0)
+                break
+            }
+            case Colour.Pink:{
+                sphero.setAllLeds(255, 105, 180)
+                break
+            }
+            case Colour.Purple:{
+                sphero.setAllLeds(128, 0, 128)
+                break
+            }
+            case Colour.Red:{
+                sphero.setAllLeds(255, 0, 0)
+                break
+            }
+            case Colour.White:{
+                sphero.setAllLeds(255, 255, 255)
+                break
+            }
+            case Colour.Yellow:{
+                sphero.setAllLeds(255, 255, 0)
+                break
+            }
+        }
     }
 }
 
