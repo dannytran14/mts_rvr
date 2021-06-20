@@ -86,9 +86,9 @@ namespace MTS_RVR {
     //% subcategory=Movement
     //% blockGap=8
     //% block="move at speed $speed"
-    //% speed.min=-1 speed.max=10
-    export function Move(input: number) :void {
-        let speed = input * 6;
+    //% speed.min=1 speed.max=10
+    export function Move(speed: number) :void {
+        speed = speed * 6;
         if (speed > 60){
             speed = 60
         }
