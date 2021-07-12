@@ -104,15 +104,10 @@ namespace MTS_RVR {
     //% block="turn %heading degrees"
     //% heading.min=-180 heading.max=180
     export function Turn(heading: number): void {
-        degree += heading
-        if (degree > 359){
-            degree -= 360
-        }
-        else if (degree < 0){
-            degree += 360
-        }
-        sphero.drive(0, degree)
-        basic.pause(1000)
+        sphero.drive(0, heading)
+        basic.pause(500)
+        sphero.resetYaw()
+        basic.pause(300)
     }
 
     /**
