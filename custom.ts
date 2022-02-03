@@ -5,20 +5,20 @@
  */
 
 enum HasNot {
-    Has_Not, 
+    Has_Not,
     Has
 }
 
-enum Colour{
-    Red, 
-    Green, 
-    Blue, 
-    Orange, 
-    Yellow, 
-    Pink, 
-    Purple, 
-    Brown, 
-    Black, 
+enum Colour {
+    Red,
+    Green,
+    Blue,
+    Orange,
+    Yellow,
+    Pink,
+    Purple,
+    Brown,
+    Black,
     White
 }
 let degree: number = 0
@@ -37,9 +37,6 @@ namespace MTS_RVR {
     //% block="start up"
     export function Start_Up(): void {
         sphero.resetYaw()
-        //huskylens.initI2c()
-        //huskylens.request();
-        //huskylens.readeBox_index(1, 1, Content1.xCenter);
         position = -1
         degree = 0
         delay = 1500
@@ -77,9 +74,36 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block
     export function Output(): void {
-        huskylens.writeOSD(delay.toString(), 150, 30)
+        huskylens.writeOSD(grove.measureInCentimeters(DigitalPin.P15).toString(), 150, 30)
     }
-    
+
+    /**
+     * Changes the HuskyLens to tag recognition mode
+     */
+    //% subcategory=Initialise
+    //% blockGap=8
+    //% block
+    export function Test(): void {
+        while (grove.measureInCentimeters(DigitalPin.P15) > 20) {
+            sphero.drive(30, 0)
+            sphero.setRgbLedByIndex(sphero.LEDs.rightHeadlight, 0, 255, 0)
+        }
+        sphero.drive(0, 0)
+        sphero.setRgbLedByIndex(sphero.LEDs.rightHeadlight, 255, 0, 0)
+
+    }
+
+    /**
+     * The RVR will perform a slow movement. 
+     */
+    //% subcategory=Movement
+    //% blockGap=8
+    //% block
+    export function Stop(): void {
+        sphero.drive(0, degree)
+        basic.pause(delay)
+    }
+
     /**
      * The RVR will perform a slow movement. 
      */
@@ -87,9 +111,9 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block="move at speed $speed"
     //% speed.min=1 speed.max=10
-    export function Move(speed: number) :void {
+    export function Move(speed: number): void {
         speed = speed * 6;
-        if (speed > 60){
+        if (speed > 60) {
             speed = 60
         }
         sphero.drive(speed, degree)
@@ -102,24 +126,74 @@ namespace MTS_RVR {
     //% subcategory=Movement
     //% blockGap=8
     //% block="turn %heading degrees"
-    //% heading.min=-180 heading.max=180
+    //% heading.min=0 heading.max=180
     export function Turn(heading: number): void {
-        sphero.drive(0, heading)
-        basic.pause(500)
         sphero.resetYaw()
         basic.pause(300)
+        degree = 0
+        degree = heading
+        if (degree > 359) {
+            degree = 180
+        }
+        else if (degree < 0) {
+            degree = 0
+        }
+        sphero.drive(0, degree)
+        basic.pause(500)
+
     }
 
     /**
-     * The RVR will stop.  
+     * The RVR will move in the heading specified. 
      */
     //% subcategory=Movement
     //% blockGap=8
-    //% block
-    //% heading.min=0 heading.max=359
-    export function Stop(): void {
+    //% block="turn left %heading degrees"
+    //% heading.min=0 heading.max=180
+    export function Turn_Left(heading: number): void {
+        sphero.resetYaw()
+        basic.pause(300)
+        degree = 0
+
+        if (heading > 180) {
+            degree = 180
+        }
+        else if (heading < 0) {
+            degree = 0
+        }
+        else {
+            degree = degree - heading + 360
+        }
         sphero.drive(0, degree)
-    } 
+        basic.pause(500)
+
+    }
+
+    /**
+     * The RVR will move in the heading specified. 
+     */
+    //% subcategory=Movement
+    //% blockGap=8
+    //% block="turn right %heading degrees"
+    //% heading.min=0 heading.max=180
+    export function Turn_Right(heading: number): void {
+        sphero.resetYaw()
+        basic.pause(300)
+        degree = 0
+
+        if (heading > 180) {
+            degree = 180
+        }
+        else if (heading < 0) {
+            degree = 0
+        }
+        else {
+            degree = heading
+        }
+        sphero.drive(0, degree)
+        basic.pause(500)
+
+    }
 
     /**
      * Will return a true value once the RVR has reached its pick up distance. 
@@ -127,46 +201,46 @@ namespace MTS_RVR {
     //% subcategory=Sonar
     //% blockGap=8
     //% block="sonar %not detected pick up range"
-    export function SonarPickUpRange(not: HasNot): boolean {
-        delay = 100; 
+    export function Sonar_Pick_Up_Range(not: HasNot): boolean {
+        delay = 0;
         if (not == HasNot.Has) {
             if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
-            return true;
+                return true;
             }
             else
                 return false
         }
-        else{
+        else {
             if (grove.measureInCentimeters(DigitalPin.P15) <= 8) {
-            return false;
+                return false;
             }
-            else{
+            else {
                 return true
             }
         }
 
     }
 
-     /**
-     * The Sonar will return a true value once it detects that the RVR should slow down once it detects a collision ahead. 
-     */
+    /**
+    * The Sonar will return a true value once it detects that the RVR should slow down once it detects a collision ahead. 
+    */
     //% block="sonar %not detected a collision"
     //% subcategory=Sonar
     //% blockGap=8
     export function SonarCollision(not: HasNot): boolean {
-        delay = 100; 
+        delay = 0;
         if (not == HasNot.Has) {
-            if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
-            return true;
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 30) {
+                return true;
             }
             else
                 return false
         }
-        else{
-            if (grove.measureInCentimeters(DigitalPin.P15) <= 20) {
-            return false;
+        else {
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 30) {
+                return false;
             }
-            else{
+            else {
                 return true
             }
         }
@@ -178,26 +252,26 @@ namespace MTS_RVR {
     //% block="sonar %not detected an object"
     //% subcategory=Sonar
     //% blockGap=8
-    export function SonarObject (not: HasNot): boolean {
-        delay = 100; 
+    export function SonarObject(not: HasNot): boolean {
+        delay = 0;
         if (not == HasNot.Has) {
-            if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
-            return true;
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 30) {
+                return true;
             }
             else
                 return false
         }
-        else{
-            if (grove.measureInCentimeters(DigitalPin.P15) <= 25) {
-            return false;
+        else {
+            if (grove.measureInCentimeters(DigitalPin.P15) <= 30) {
+                return false;
             }
-            else{
+            else {
                 return true
             }
         }
     }
 
-    
+
 
     /**
      * The RVR will rotate until the object is centred on the HuskyLens. 
@@ -206,7 +280,7 @@ namespace MTS_RVR {
     //% blockGap=8
     //% block="centre object on screen"
     export function H_Centre_Object_On_Screen(): void {
-        let position : number;
+        let position: number;
         huskylens.request()
         position = huskylens.readBox_s(Content3.xCenter)
         while ((position < 145 || position > 175) && position != -1) {
@@ -219,16 +293,26 @@ namespace MTS_RVR {
                 MTS_RVR.Turn(-10)
             } else if (position < 145) {
                 MTS_RVR.Turn(-5)
-            } else if (position > 230) {
-                MTS_RVR.Turn(15)
-            } else if (position > 200) {
-                MTS_RVR.Turn(10)
             } else if (position > 175) {
                 MTS_RVR.Turn(5)
+            } else if (position > 200) {
+                MTS_RVR.Turn(10)
+            } else if (position > 230) {
+                MTS_RVR.Turn(15)
             }
-            basic.pause(300)
             huskylens.request()
         }
+    }
+
+    function Int_turn(heading: number): void {
+        degree += heading
+        if (degree > 359) {
+            degree -= 360
+        }
+        else if (degree < 0) {
+            degree += 360
+        }
+        sphero.drive(0, degree)
     }
 
     /**
@@ -237,46 +321,46 @@ namespace MTS_RVR {
     //% block="husky %not located object"
     //% subcategory=HuskyLens
     //% blockGap=8
-    export function HuskyTargetLocated (not: HasNot) : boolean {
+    export function HuskyTargetLocated(not: HasNot): boolean {
         delay = 100
         let position: number;
         huskylens.request();
         position = huskylens.readBox_s(Content3.xCenter)
-        if (not == HasNot.Has){
-            if (position == -1) 
+        if (not == HasNot.Has) {
+            if (position == -1)
                 return false
-            else 
+            else
                 return true
-        }   
-        else{
-            if (position == -1) 
+        }
+        else {
+            if (position == -1)
                 return true
-            else 
+            else
                 return false
         }
     }
 
-     /**
-     * HuskyLens checks whether home has been located.
-     */
+    /**
+    * HuskyLens checks whether home has been located.
+    */
     //% subcategory=HuskyLens
     //% blockGap=8
     //% block="husky %not located home "
-    export function HuskyHomeLocated (not: HasNot) {
+    export function HuskyHomeLocated(not: HasNot) {
         delay = 100
         let position: number;
         huskylens.request();
         position = huskylens.readBox_s(Content3.xCenter)
-        if (not == HasNot.Has){
-            if (position == -1) 
+        if (not == HasNot.Has) {
+            if (position == -1)
                 return false
-            else 
+            else
                 return true
-        }   
-        else{
-            if (position == -1) 
+        }
+        else {
+            if (position == -1)
                 return true
-            else 
+            else
                 return false
         }
     }
@@ -325,7 +409,7 @@ namespace MTS_RVR {
     //% subcategory=Arm
     //% blockGap=8
     //% block="open gripper"
-    export function Open_Gripper () {
+    export function Open_Gripper() {
         servos.P0.setAngle(0)
         basic.pause(500)
         pins.digitalWritePin(DigitalPin.P0, 0)
@@ -337,45 +421,45 @@ namespace MTS_RVR {
     //% subcategory=Light
     //% blockGap=8
     //% block="change light colour to $colour"
-    export function Light (colour : Colour) {
-        switch(colour){
-            case Colour.Black:{
+    export function Light(colour: Colour) {
+        switch (colour) {
+            case Colour.Black: {
                 sphero.setAllLeds(0, 0, 0)
                 break
             }
-            case Colour.Blue:{
+            case Colour.Blue: {
                 sphero.setAllLeds(0, 0, 255)
                 break
             }
-            case Colour.Brown:{
+            case Colour.Brown: {
                 sphero.setAllLeds(139, 69, 19)
                 break
             }
-            case Colour.Green:{
+            case Colour.Green: {
                 sphero.setAllLeds(0, 255, 0)
                 break
             }
-            case Colour.Orange:{
+            case Colour.Orange: {
                 sphero.setAllLeds(255, 140, 0)
                 break
             }
-            case Colour.Pink:{
+            case Colour.Pink: {
                 sphero.setAllLeds(255, 105, 180)
                 break
             }
-            case Colour.Purple:{
+            case Colour.Purple: {
                 sphero.setAllLeds(128, 0, 128)
                 break
             }
-            case Colour.Red:{
+            case Colour.Red: {
                 sphero.setAllLeds(255, 0, 0)
                 break
             }
-            case Colour.White:{
+            case Colour.White: {
                 sphero.setAllLeds(255, 255, 255)
                 break
             }
-            case Colour.Yellow:{
+            case Colour.Yellow: {
                 sphero.setAllLeds(255, 255, 0)
                 break
             }
