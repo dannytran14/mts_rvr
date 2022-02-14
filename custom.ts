@@ -109,7 +109,7 @@ namespace MTS_RVR {
      */
     //% subcategory=Movement
     //% blockGap=8
-    //% block="move at speed $speed"
+    //% block="move at speed $speed for 1 second"
     //% speed.min=1 speed.max=10
     export function Move(speed: number): void {
         speed = speed * 6;
@@ -125,7 +125,6 @@ namespace MTS_RVR {
      */
     //% subcategory=Movement
     //% blockGap=8
-    //% block="turn %heading degrees"
     //% heading.min=0 heading.max=180
     export function Turn(heading: number): void {
         sphero.resetYaw()
@@ -200,7 +199,7 @@ namespace MTS_RVR {
      */
     //% subcategory=Sonar
     //% blockGap=8
-    //% block="sonar %not detected pick up range"
+    //% block="sonar %not detected object at short range"
     export function Sonar_Pick_Up_Range(not: HasNot): boolean {
         delay = 0;
         if (not == HasNot.Has) {
@@ -249,7 +248,7 @@ namespace MTS_RVR {
     /**
      * The Sonar will return a true value once it detects that the RVR should slow once it detects an object. 
      */
-    //% block="sonar %not detected an object"
+    //% block="sonar %not detected object at far range"
     //% subcategory=Sonar
     //% blockGap=8
     export function SonarObject(not: HasNot): boolean {
