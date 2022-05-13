@@ -127,6 +127,32 @@ namespace MTS_Movement  {
         basic.pause(500)
 
     }
+
+
+    /**
+     * The arm will rotate out from its fold in position, in preparation for picking up an object. 
+     */
+    //% blockGap=8
+    //% block="rotate bin horizontal"
+    export function Move_Arm_In(): void {
+        servos.P1.setAngle(20)
+        basic.pause(500)
+        pins.digitalWritePin(DigitalPin.P1, 0)
+        servos.P0.setAngle(110)
+    }
+
+    /**
+     * The RVR will swing the arm out from its folding position. 
+     */
+    //% blockGap=8
+    //% block="rotate bin vertical"
+    export function Move_Arm_Out(): void {
+        pins.digitalWritePin(DigitalPin.P0, 0)
+        servos.P1.setAngle(90)
+        basic.pause(500)
+        pins.digitalWritePin(DigitalPin.P1, 0)
+    }
+
 }
 
 //% weight=996   color=#000000 icon=""
@@ -440,44 +466,7 @@ namespace MTS_RVR{
 
     
 
-    /**
-     * The arm will rotate out from its fold in position, in preparation for picking up an object. 
-     */
-    //% subcategory=Arm
-    //% blockGap=8
-    //% block="move arm up"
-    function Move_Arm_In(): void {
-        servos.P1.setAngle(20)
-        basic.pause(500)
-        pins.digitalWritePin(DigitalPin.P1, 0)
-        servos.P0.setAngle(110)
-    }
-
-    /**
-     * The RVR Gripper will close. 
-     */
-    //% block="close gripper"
-    //% subcategory=Arm
-    //% blockGap=8
-    function Close_Gripper(): void {
-        servos.P0.setAngle(110)
-        basic.pause(500)
-        pins.digitalWritePin(DigitalPin.P0, 0)
-    }
-
-    /**
-     * The RVR will swing the arm out from its folding position. 
-     */
-    //% subcategory=Arm
-    //% blockGap=8
-    //% block="move arm down"
-    function Move_Arm_Out(): void {
-        pins.digitalWritePin(DigitalPin.P0, 0)
-        servos.P1.setAngle(90)
-        basic.pause(500)
-        pins.digitalWritePin(DigitalPin.P1, 0)
-    }
-
+    
     /**
      * The RVR Gripper will open. 
      */
